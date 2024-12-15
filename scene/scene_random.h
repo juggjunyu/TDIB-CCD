@@ -24,14 +24,16 @@ static void generatePatchPair(std::array<Vector3d, ObjType::cntCp> &CpPos1, std:
 template<typename ObjType, typename ParamType>
 void randomTest(const SolverType& solver, const BoundingBoxType & bb,
 				const double& deltaDist, const int& kase){
+	//两个物体的初始位置和速度
 	ObjType pos1, pos2, vel1, vel2;
 	std::srand(0);
-	int hasCol = 0;
+	int hasCol = 0;//记录有多少对碰撞了
 	double t;
 	Array2d uv1,uv2;
 
 	using steady_clock = std::chrono::steady_clock;
-	using duration = std::chrono::duration<double>;
+	using duration = std::chrono::duration<double>;	
+	//起始时间
 	const auto initialTime = steady_clock::now();
 	for(int k = 0; k < kase; k ++){
 		generatePatchPair<ObjType>(pos1.ctrlp, vel1.ctrlp, pos2.ctrlp, vel2.ctrlp);
@@ -43,9 +45,18 @@ void randomTest(const SolverType& solver, const BoundingBoxType & bb,
 			std::cerr<<"solver not implemented!\n";
 			exit(-1);
 		}
-		if(t>=0)hasCol++;
-		std::cout<<"case "<<k<<" done.\n";
+		if(t>=0)
+		{
+			hasCol++;
+			std::cout << "Case " << k << ": " << "Earliest collision occurs at " << t << "s.\n";
+		}
+		else
+		{
+
+			std::cout << "Case " << k << ": " << "No collision.\n";
+		}
 	}
+	//结束时间
 	const auto endTime = steady_clock::now();
 	std::cout << hasCol<<" pairs have collided.\n";
 	std::cout << "average seconds: " <<
